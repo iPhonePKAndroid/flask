@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>title</title>
+	<style type="text/css">
+		.diy {
+			color: red;
+		}
+	</style>
+</head>
+<body>
+
+
+
+	<p>{{ 'hello world'|upper }}</p>
+
+	引入宏
+	{% import 'macros.html' as macros %}
+	{{ macros.render_a('name','https://www.fakajun.com/') }}
+
+
+	定义宏
+	{% macro render_li(text) %}
+		<li class="diy">{{ text }}</li>
+	{% endmacro %}
+
+
+	使用宏
+	<ul>
+		{% for list in lists %}
+			{{ render_li(list) }}
+		{% endfor %}
+	</ul>
+
+
+
+	{{ clas.test()|capitalize }}
+
+
+
+	<hr>
+
+
+
+	{% if name %}
+		<b>{{name}}</b>
+	{% endif %}
+
+
+{% include 'script.html' %}
+</body>
+</html>
