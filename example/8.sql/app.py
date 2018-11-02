@@ -3,7 +3,6 @@
 :author <wenidng> postmaster@g000.cn
 """
 
-
 from flask import Flask,jsonify
 # 引入SQLAlchemy
 from flask_sqlalchemy import SQLAlchemy
@@ -116,11 +115,15 @@ count()
 paginate()
 
 """
-		
+
 
 @app.route('/')
 def index():
 	return jsonify('ok')
+
+@app.route('/test/')
+def test():
+	return __name__
 
 if __name__ == '__main__':
 	app.run(host='0.0.0.0',port=5000,debug=True)
