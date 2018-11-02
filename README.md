@@ -5,7 +5,15 @@
 
 #### 命令行
 
-待补充
+```sh
+export FLASK_APP=3_migrate.py
+export FLASK_DEBUG=1
+flask shell
+
+
+
+```
+
 
 ***虚拟环境***
 

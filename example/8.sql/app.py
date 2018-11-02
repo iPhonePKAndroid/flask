@@ -1,5 +1,5 @@
 """
-数据库
+数据库ORM
 :author <wenidng> postmaster@g000.cn
 """
 
@@ -17,6 +17,11 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # 初始化模型实例
 db = SQLAlchemy(app)
 
+# 集成Python Shell，创建并注册一个shell上下文控制器
+@app.shell_context_processor
+def make_shell_context():
+	return dict(db=db, User=User, Role=Role)
+
 # 定义模型
 class Role(db.Model):
 	__tablename__ = 'roles'
@@ -25,6 +30,7 @@ class Role(db.Model):
 	# 模型关联：lazy='dynamic'禁用自动查询
 	users = db.relationship('User', backref='role', lazy='dynamic')
 
+	# Python中这个_repr_函数，对应repr(object)这个函数，返回一个可以用来表示对象的可打印字符串
 	def __repr__(self):
 		return '<Role %r>' % self.name
 
@@ -35,6 +41,7 @@ class User(db.Model):
 	# 模型关联
 	role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
 
+	# Python中这个_repr_函数，对应repr(object)这个函数，返回一个可以用来表示对象的可打印字符串
 	def __repr__(self):
 		return '<User %r>' % self.username
 
