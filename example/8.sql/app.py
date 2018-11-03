@@ -79,6 +79,7 @@ db.session.rollback()
 
 #关联查询
 print(admin_role.id)
+# SQL语句
 print(admin_role.users)
 
 print(user_john.role)
