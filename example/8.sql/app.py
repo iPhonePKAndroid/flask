@@ -27,7 +27,7 @@ class Role(db.Model):
 	__tablename__ = 'roles'
 	id = db.Column(db.Integer, primary_key=True)
 	name = db.Column(db.String(64), unique=True)
-	# 模型关联：lazy='dynamic'禁用自动查询
+	# 一对多模型关联：lazy='dynamic'禁用自动查询，backref='role'也就是user.role，uselist=False为一对一
 	users = db.relationship('User', backref='role', lazy='dynamic')
 
 	# Python中这个_repr_函数，对应repr(object)这个函数，返回一个可以用来表示对象的可打印字符串
@@ -65,9 +65,9 @@ user_david = User(username='david', role=user_role)
 print(admin_role.id) # None
 
 # 数据库事务
-#db.session.add(admin_role)
-#db.session.add(mod_role)
-#db.session.add(user_role)
+db.session.add(admin_role)
+db.session.add(mod_role)
+db.session.add(user_role)
 
 db.session.add_all([admin_role, mod_role,user_role,user_john,user_susan,user_david])
 
@@ -91,19 +91,21 @@ admin_role.name = 'Administrator'
 db.session.add(admin_role)
 db.session.commit()
 
-# 删除行
+# 删除行，也需要提交事务
 db.session.delete(admin_role)
 db.session.commit()
 
 # 查询行
 Role.query.all()
 
-# 筛选查询
+# 关联筛选查询
 User.query.filter_by(role=user_role).all()
 User.query.filter_by(role=user_role).first()
 
 # 获得SQL语句
 str(User.query.filter_by(role=user_role))
+
+
 
 # 查询过滤器
 filter() 把过滤器加到原查询上，返回一个新的查询

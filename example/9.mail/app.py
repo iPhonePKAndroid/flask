@@ -11,6 +11,8 @@ from flask_bootstrap import Bootstrap
 from flask_mail import Mail, Message
 # 引入SQLAlchemy
 from flask_sqlalchemy import SQLAlchemy
+# 使用多线程
+from threading import Thread
 
 app = Flask(__name__)
 bootstrap = Bootstrap(app)
@@ -28,23 +30,30 @@ db = SQLAlchemy(app)
 mail = Mail(app)
 
 app.config['MAIL_SERVER'] = 'smtp.qq.com'
-app.config['MAIL_PORT'] = 587
+app.config['MAIL_PORT'] = 465
 app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
-app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
+app.config['MAIL_USERNAME'] = '71314126@qq.com'
+app.config['MAIL_PASSWORD'] = 'xxxxx'
 
-
-app.config['FLASK_MAIL_SUBJECT_PREFIX'] = '[Flask]'
+app.config['FLASK_MAIL_SUBJECT_PREFIX'] = '测试'
 app.config['FLASK_MAIL_SENDER'] = 'Wending <71314126@qq.com>'
 
-app.config['FLASK_ADMIN'] = os.environ.get('FLASK_ADMIN')
+app.config['FLASK_ADMIN'] = 'postmaster@g000.cn'
+print(app.config['FLASK_ADMIN'])
 
+# 异步邮件通知
+def send_async_email(app, msg):
+	with app.app_context():
+		mail.send(msg)
+
+# 使用多线程发送邮件
 def send_mail(to, subject, template, **kwargs):
-	msg = Message(app.config['FLASK_MAIL_SUBJECT_PREFIX'], app.config['FLASK_MAIL_SENDER'], recipients=[to])
+	msg = Message(app.config['FLASK_MAIL_SUBJECT_PREFIX'], sender=app.config['FLASK_MAIL_SENDER'], recipients=[to])
 	msg.body = render_template(template+'.txt', **kwargs)
 	msg.html = render_template(template+'.html', **kwargs)
-	mail.send(msg)
-
+	thr = Thread(target=send_async_email, args=[app, msg])
+	thr.start()
+	return thr
 
 # 集成Python Shell，创建并注册一个shell上下文控制器
 @app.shell_context_processor
@@ -87,7 +96,7 @@ def index():
 	if form.validate_on_submit():
 		user = User.query.filter_by(username=form.name.data).first()
 		if user is None:
-			user = User(username=form.name.data,role_id=2)
+			user = User(username=form.name.data)
 			db.session.add(user)
 			session['known'] = False
 			db.session.commit()

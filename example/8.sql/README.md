@@ -1,6 +1,8 @@
 ## 说明
 
 ```sh
+export FLASK_APP=3_migrate.py
+
 # 添加数据库迁移支持
 flask db init
 
