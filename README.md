@@ -39,4 +39,3 @@ pip freeze
 
 * 微信iPhonePKAndroid
 * [https://www.g000.cn](https://www.g000.cn)
-* 河池市问鼎科技有限公司
