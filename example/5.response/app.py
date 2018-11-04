@@ -46,5 +46,15 @@ def get_post(id):
 		abort(404)
 	return '文章ID：{}'.format(id)
 
+# 404
+@app.errorhandler(404)
+def page_not_found(error):
+    return 'This page does not exist', 404
+
+# 500
+@app.errorhandler(500)
+def server_error(error):
+	return 'server error', 500
+
 if __name__ == '__main__':
 	app.run(host='0.0.0.0',port=5000,debug=True)
