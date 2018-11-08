@@ -5,6 +5,7 @@ from ..email import send_email
 from . import main
 from .forms import NameForm
 
+from flask_login import login_required
 
 @main.route('/', methods=['GET', 'POST'])
 def index():
@@ -26,3 +27,7 @@ def index():
     return render_template('index.html', form=form, name=session.get('name'), known=session.get('known', False))
 
 
+@main.route('/auth')
+@login_required
+def auth():
+    return '已登录'
